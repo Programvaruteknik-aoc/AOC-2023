@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"unicode"
 )
 
@@ -15,9 +16,12 @@ func RunDay01() {
 	fileScanner.Split(bufio.ScanLines)
 
 	for fileScanner.Scan() {
-		totalSum += findFirstAndLastDigit(fileScanner.Text())
+		totalSum += findFirstAndLastDigit(testGet(fileScanner.Text()))
 	}
-	file.Close()
+	err := file.Close()
+	if err != nil {
+		return
+	}
 	fmt.Println("The sum of all calibration values is:", totalSum)
 }
 
@@ -35,4 +39,23 @@ func findFirstAndLastDigit(str string) int {
 		}
 	}
 	return firstDig*10 + lastDig
+}
+
+func testGet(str string) string {
+	var textToNumberMap = map[string]string{
+		"one": "1", "two": "2", "three": "3", "four": "4",
+		"five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"}
+
+	var result strings.Builder
+	for i := 0; i < len(str); i++ {
+		result.WriteRune(rune(str[i]))
+		for j := i + 1; j <= len(str); j++ {
+			substr := str[i:j]
+			if numDig, exists := textToNumberMap[substr]; exists {
+				result.WriteString(numDig)
+			}
+		}
+	}
+
+	return result.String()
 }
