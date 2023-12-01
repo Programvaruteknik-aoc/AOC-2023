@@ -40,14 +40,12 @@ defmodule Day1 do
 
     Regex.scan(number_token_or_digit, line)
     |> List.flatten()
-    |> Enum.reject(&(&1 == ""))
-    |> Enum.map(fn token ->
-      Map.get(number_token_values, token, token)
-    end)
+    |> Enum.reject(fn match -> match == "" end)
+    |> Enum.map(fn token -> Map.get(number_token_values, token, token) end)
   end
 
-  def extract_first_and_last_digits(list) do
-    case list do
+  def extract_first_and_last_digits(digits) do
+    case digits do
       [first | _] = matches ->
         last = List.last(matches)
         String.to_integer(first <> last)
