@@ -8,8 +8,8 @@ defmodule Day1 do
   def part1(input) do
     stream_lines(input)
     |> Enum.map(&String.trim/1)
-    |> Enum.map(&extract_numbers/1)
-    |> Enum.map(&concatenate_numbers/1)
+    |> Enum.map(&find_digits/1)
+    |> Enum.map(&extract_first_and_last_digits/1)
     |> Enum.sum()
   end
 
@@ -19,26 +19,17 @@ defmodule Day1 do
   def part2(input) do
     stream_lines(input)
     |> Enum.map(&String.trim/1)
-    |> Enum.map(&extract_numbers_including_tokens/1)
+    |> Enum.map(&find_digits_including_tokens/1)
     |> Enum.map(&extract_first_and_last_digits/1)
     |> Enum.sum()
-
   end
 
-  defp extract_numbers(line) do
-    case Regex.scan(~r/\d/, line) do
-      [first_num | _] = matches ->
-        last_num = List.last(matches)
-        {hd(first_num), hd(last_num)}
-        _ -> {0, 0}
-      end
-    end
-
-  defp concatenate_numbers({first, last}) do
-    String.to_integer(first <> last)
+  defp find_digits(line) do
+    Regex.scan(~r/\d/, line)
+    |> List.flatten()
   end
 
-  defp extract_numbers_including_tokens(line) do
+  defp find_digits_including_tokens(line) do
     number_token_values = %{
       "one" => "1", "two" => "2", "three" => "3",
       "four" => "4", "five" => "5", "six" => "6",
@@ -63,5 +54,4 @@ defmodule Day1 do
       _ -> 0
     end
   end
-
 end
