@@ -24,12 +24,12 @@ defmodule Day1 do
     |> Enum.sum()
   end
 
-  defp find_digits(line) do
+  def find_digits(line) do
     Regex.scan(~r/\d/, line)
     |> List.flatten()
   end
 
-  defp find_digits_including_tokens(line) do
+  def find_digits_including_tokens(line) do
     number_token_values = %{
       "one" => "1", "two" => "2", "three" => "3",
       "four" => "4", "five" => "5", "six" => "6",
@@ -46,7 +46,7 @@ defmodule Day1 do
     end)
   end
 
-  defp extract_first_and_last_digits(list) do
+  def extract_first_and_last_digits(list) do
     case list do
       [first | _] = matches ->
         last = List.last(matches)
