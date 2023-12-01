@@ -16,7 +16,7 @@ func RunDay01() {
 	fileScanner.Split(bufio.ScanLines)
 
 	for fileScanner.Scan() {
-		totalSum += findFirstAndLastDigit(testGet(fileScanner.Text()))
+		totalSum += findFirstAndLastDigit(addNumberToString(fileScanner.Text()))
 	}
 	err := file.Close()
 	if err != nil {
@@ -41,7 +41,7 @@ func findFirstAndLastDigit(str string) int {
 	return firstDig*10 + lastDig
 }
 
-func testGet(str string) string {
+func addNumberToString(str string) string {
 	var textToNumberMap = map[string]string{
 		"one": "1", "two": "2", "three": "3", "four": "4",
 		"five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"}
