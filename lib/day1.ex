@@ -17,11 +17,10 @@ defmodule Day1 do
   Solves part2 by doing the same, but considering number tokens as valid numbers too.
   """
   def part2(input) do
-    IO.puts("Not implemented #{input} ")
     stream_lines(input)
     |> Enum.map(&String.trim/1)
     |> Enum.map(&extract_numbers_including_tokens/1)
-    |> Enum.map(&IO.inspect/1)
+    |> Enum.map(&extract_first_and_last_digits/1)
     |> Enum.sum()
 
   end
@@ -45,40 +44,24 @@ defmodule Day1 do
       "four" => "4", "five" => "5", "six" => "6",
       "seven" => "7", "eight" => "8", "nine" => "9"
     }
-    number_token_or_digit = ~r/(?:one|two|three|four|five|six|seven|eight|nine|\d)/
+
+    number_token_or_digit = ~r/(?=(one|two|three|four|five|six|seven|eight|nine|\d))/
+
     Regex.scan(number_token_or_digit, line)
     |> List.flatten()
-    # |> Enum.map(&IO.inspect/1)
+    |> Enum.reject(&(&1 == ""))
     |> Enum.map(fn token ->
       Map.get(number_token_values, token, token)
     end)
-    |> extract_first_and_last_digits()
   end
-
-  # defp extract_first_and_last_digits(list) do
-  #   case list do
-  #     [first | _] = matches ->
-  #       last = List.last(matches)
-  #       String.to_integer(first <> last)
-  #     _ -> 0
-  #   end
-  # end
 
   defp extract_first_and_last_digits(list) do
     case list do
-      [single] ->
-        # If there's only one digit, duplicate it for both first and last
-        String.to_integer(single <> single)
-        # single <> single
       [first | _] = matches ->
-        # If there are multiple digits, take the first and last as usual
         last = List.last(matches)
         String.to_integer(first <> last)
-        # first <> last
-      _ ->
-        0
+      _ -> 0
     end
   end
-
 
 end
