@@ -21,14 +21,13 @@ def part_two() -> int:
         "one": "1", "two": "2", "three": "3", "four": "4",
         "five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"
     }
-    with open('test.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         for line in f:
             line = line.lower()
             for key, value in digits.items():
                 line = line.replace(key, key[0] + value + key[-1])
-
             found_digits = re.findall(r'\d+', line)
-            if len(found_digits) == 1 and len(found_digits[0]) > 0:
+            if len(found_digits) == 1 and len(found_digits[0]) > 9:
                 x += int(found_digits[0])
             else:
                 first_int = found_digits[0][0]
