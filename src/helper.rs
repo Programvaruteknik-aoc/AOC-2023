@@ -9,7 +9,7 @@ pub struct Data{
 
 impl Data{
     pub fn new(day:i32, part:u8) -> Data{
-        // fs::read_to_string("inputs/day1/day1_input1.txt")
+        // fs::read_to_string("inputs/day1/day2_input1.txt")
         let d:String = day.to_string();
         let p:String = part.to_string();
         let dir:String = "./src/inputs/day".to_owned() + &*d + "/day" + &*d + "_";
