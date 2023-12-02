@@ -9,9 +9,6 @@ enum Types {
 pub fn start(){
     let data = Data::new(2,1);
 
-    let red = 12;
-    let green = 13;
-    let blue = 14;
     let mut sum = 0;
     for line in data.input.lines(){
         let first:Vec<&str> = line.split(":").collect();
