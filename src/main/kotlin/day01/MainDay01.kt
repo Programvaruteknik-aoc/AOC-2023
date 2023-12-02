@@ -1,23 +1,20 @@
 package day01
 
 import Util
+import extractNumericVal
 
-fun main() {
-    val input = Util.getTextFromFile("src/main/kotlin/day01/inputDay01.txt")
 
+fun main(){
+    val input = Util.getTextLinesFromFile("src/main/kotlin/day01/inputDay01.txt")
     println(part1(input = input))
     println(part2(input = input))
 }
-fun String.extractInt():String{
-    return this.filter{
-        it.isDigit()
-    }
-}
+
 
 fun part1(input:List<String>): Int {
     val intList = mutableListOf<Int>()
     input.map {
-        val intStr = it.extractInt()
+        val intStr = it.extractNumericVal()
         intList.add("${intStr.first()}${intStr.last()}".toInt())
     }
     return intList.sum()
@@ -37,26 +34,18 @@ fun part2(input:List<String>):Int {
 
     val intList = mutableListOf<Int>()
     var intStr = ""
-
-    var subString: String
     var ch:Char = 0.toChar()
-    input.map {line->
-        line.forEachIndexed{index, c ->
+    input.map {
+        it.forEachIndexed{index, c ->
 
-            if(c.isDigit()){
-                ch=c
-            }
+            if(c.isDigit())ch=c
             else{
-                subString = line.substring(index)
                 for (key in numberNames.keys) {
-
-                    if (subString.startsWith(key)){
-                        ch = numberNames[key]!!.toCharArray()[0]
+                    if (it.substring(index).startsWith(key)){
+                        ch = numberNames[key]!![0]
                         break
                     }
-                    else{
-                        ch=0.toChar()
-                    }
+                    else ch = 0.toChar()
                 }
             }
             if (ch != 0.toChar()){
@@ -65,11 +54,9 @@ fun part2(input:List<String>):Int {
         }
         intList.add("${intStr.first()}${intStr.last()}".toInt())
         intStr=""
-
     }
 
    return intList.sum()
 
 }
-
 
