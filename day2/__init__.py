@@ -1,9 +1,5 @@
 import re
 
-bag = {
-        12: 'red', 13: 'green', 14: 'blue'
-    }
-
 
 def main():
     print(part_one())
@@ -19,9 +15,8 @@ def part_one() -> int:
             for game in games.split(';'):
                 game_map = {}
                 game = game.strip()
-                pairs = game.split(',')
-                for pair in pairs:
-                    number, color = pair.strip().split(' ')
+                for game_pair in game.split(','):
+                    number, color = game_pair.strip().split(' ')
                     game_map[int(number)] = color
                 if not process_map(game_map):
                     legit = False
@@ -31,6 +26,11 @@ def part_one() -> int:
 
 
 def process_map(game_map) -> bool:
+
+    bag = {
+        12: 'red', 13: 'green', 14: 'blue'
+    }
+
     for key, value in game_map.items():
         if value in bag.values():
             corresponding_bag_key = [bag_key for bag_key, bag_value in bag.items() if bag_value == value][0]
