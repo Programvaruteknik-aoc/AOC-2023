@@ -3,6 +3,28 @@ import re
 
 def main():
     print(part_one())
+    print(part_two())
+
+
+def part_two() -> int:
+
+    with open('input.txt', 'r') as f:
+        x = 0
+        for line in f:
+            games = line.split(':', 1)[1]
+            game_map = {}
+            for game in games.split(';'):
+                game = game.strip()
+                for game_pair in game.split(','):
+                    color = game_pair.split(" ")[-1]
+                    number = re.findall(r'\d+', game_pair)[0]
+                    if color not in game_map or game_map[color] < int(number):
+                        game_map[color] = int(number)
+            y = 1
+            for value in game_map.values():
+                y *= int(value)
+            x += y
+    return x
 
 
 def part_one() -> int:
