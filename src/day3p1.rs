@@ -50,52 +50,104 @@ pub fn start(){
     // let symbols = "!#$%&'*+,-()";
     let symbols = who_dis(&data);
     let mut sum:u32 = 0;
-    let mut start:u32 = 0;
-    let mut v:u32 = 0;
-    let mut word:String = String::from("");
     let mut line_num = 0;
-    let mut has_pn = false;
     let mut lines:Vec<&str> = data.input.lines().collect();
     let lines_count = lines.len() as i32;
+
     data.input.lines().for_each(|line|{
         let mut pre:char = char::from(0);
+        let mut has_pn = false;
+        let mut word:String = String::from("");
         line.chars().enumerate().for_each(|ch|{
             let c = ch.1;
             let i = ch.0;
 
-            if is_digit(c){
-                if is_digit(pre){
-                    // First digit
-                    word = format!("{}{}",word,c);
 
-                }
-                else{
-                    // Second, third .... digit
-                    word = String::from(c);
-                }
-                let cord:(i32,i32) = (i as i32,line_num);
-                let neighbours = neighbours(cord, line.len() as i32, lines_count);
-                neighbours.iter().for_each(|cell|{
-                    let row:&str = lines.get(cell.1 as usize).unwrap();
-                    let col:char = row.chars().nth(cell.0 as usize).unwrap();
-                    if symbols.contains(col){
-                        has_pn = true;
+            let next = line.chars().nth(i + 1);
+            let prev = if i > 0 {
+                Some(line.chars().nth(i - 1).unwrap())
+            } else {
+                None
+            };
+
+            ///////////////////////
+
+            if is_digit(c) {
+                if prev.is_some(){
+                    if !is_digit(prev.unwrap()){
+                        word = String::from("");
+                        has_pn = false;
                     }
-                });
-            }
-            else {
-                // If not on digit
-                if is_digit(pre) {
-                    v = word.parse().unwrap();
-                    println!("[{}] \t{}",v,has_pn);
-                    has_pn = false;
-                    sum += v;
-                }
-                else{
+                }else {
+                    word = String::from("");
 
                 }
+                word = format!("{}{}", word, c);
+                // chech neighbours
+                let coord = (i as i32,line_num);
+                let neighbours:Vec<(i32,i32)>  = neighbours(coord,line.len() as i32,lines_count);
+                print!("Neighbours: [{}]",neighbours.len());
+                let mut hasPart = false;
+                neighbours.iter().for_each(|cell|{
+                    let ln:&str = lines.get(cell.1 as usize).unwrap();
+                    let val:char = ln.chars().enumerate().nth(cell.0 as usize).unwrap().1;
+                    if symbols.contains(val){
+                        hasPart = true;
+                    }
+                    print!("{}",val);
+
+                });
+                has_pn = hasPart;
+                println!("  {}",hasPart);
+
             }
-            pre = c;
+
+            if is_digit(c) && next.is_some() {
+                if !is_digit(next.unwrap()){
+                    let v = word.parse::<u32>().unwrap();
+                    println!("[{}]",v);
+                    if has_pn{
+                        sum += v;
+
+                    }
+                }
+            }
+
+
+
+
+
+            // match prev{
+            //     Some(pc) => {
+            //
+            //         // else {
+            //         //     word = String::from("");
+            //         //     has_pn = false;
+            //         // }
+            //     }
+            //     None => {
+            //         word = String::from("");
+            //         has_pn = false;
+            //     }
+            // }
+            // match next {
+            //     Some(nc) => {
+            //         if !is_digit(nc){
+            //             if is_digit(c){
+            //                 let v = word.parse::<u32>().unwrap();
+            //                 sum += v;
+            //             }
+            //
+            //         }
+            //     }
+            //     None => {
+            //         if is_digit(c){
+            //             let v:u32 = word.parse::<u32>().unwrap();
+            //             sum += v;
+            //         }
+            //
+            //     }
+            // }
         });
         line_num += 1;
     });
