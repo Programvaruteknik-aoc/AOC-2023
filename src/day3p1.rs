@@ -1,7 +1,9 @@
+use std::sync::mpsc::sync_channel;
+use crate::day1_1::is_digit;
 use crate::helper::Data;
 
 fn validate_cell(pos:(i32,i32), xlimit:i32, ylimit:i32) -> Option<(i32,i32)> {
-    if pos.0 >= 0 && pos.1 >= 0 && pos.0 < xlimit && pos.1 < ylimit{
+    if pos.0 >= 0 && pos.1 >= 0 && pos.0 < xlimit as i32 && pos.1 < ylimit as i32 {
          return Some(pos);
      }
     None
@@ -29,7 +31,7 @@ fn neighbours(pos: (i32, i32), xlimit: i32, ylimit:i32) -> Vec<(i32, i32)> {
         let mut symbols:String = String::from("");
         data.input.lines().for_each(|line|{
             line.chars().enumerate().for_each(|c|{
-                if c.1 >= '0' && c.1 <= '9' || c.1 == '.' {
+                if is_digit(c.1) || c.1 == '.' {
 
                 }
                 else {
@@ -43,53 +45,60 @@ fn neighbours(pos: (i32, i32), xlimit: i32, ylimit:i32) -> Vec<(i32, i32)> {
     }
 
 pub fn start(){
+
     let data : Data = Data::new(3,1);
     // let symbols = "!#$%&'*+,-()";
     let symbols = who_dis(&data);
-    println!("SYMBOLS:{}",symbols);
     let mut sum:u32 = 0;
-    let mut start:i64 = -1;
-    let mut v:i32 = 0;
+    let mut start:u32 = 0;
+    let mut v:u32 = 0;
     let mut word:String = String::from("");
     let mut line_num = 0;
     let mut has_pn = false;
     let mut lines:Vec<&str> = data.input.lines().collect();
     let lines_count = lines.len() as i32;
     data.input.lines().for_each(|line|{
-        line.chars().enumerate().for_each(|c|{
-            if c.1 == '.' && start != -1{
-                println!("Number [{}]",word);
-                v = word.parse::<i32>().unwrap();
-                if has_pn {
-                    sum += v as u32;
-                }
+        let mut pre:char = char::from(0);
+        line.chars().enumerate().for_each(|ch|{
+            let c = ch.1;
+            let i = ch.0;
 
-                word = String::from("");
-                start = -1;
-                has_pn = false;
-            }
-            if c.1 >= '0' && c.1 <= '9' {
-                if(start == -1){
-                    start = c.0 as i64;
-                }
-                word = format!("{}{}",word,c.1);
+            if is_digit(c){
+                if is_digit(pre){
+                    // First digit
+                    word = format!("{}{}",word,c);
 
-                let cord:(i32,i32) = (c.0 as i32,line_num);
+                }
+                else{
+                    // Second, third .... digit
+                    word = String::from(c);
+                }
+                let cord:(i32,i32) = (i as i32,line_num);
                 let neighbours = neighbours(cord, line.len() as i32, lines_count);
-                // println!("{}  *********************************",neighbours.len());
-
-                neighbours.iter().for_each(|coord|{
-                    let l:&str = lines.get(coord.1 as usize).unwrap();
-                    let c:char = l.chars().nth(coord.0 as usize).unwrap();
-                    // print!("[{}]",c);
-                    if symbols.contains(c){
+                neighbours.iter().for_each(|cell|{
+                    let row:&str = lines.get(cell.1 as usize).unwrap();
+                    let col:char = row.chars().nth(cell.0 as usize).unwrap();
+                    if symbols.contains(col){
                         has_pn = true;
                     }
-                })
+                });
             }
+            else {
+                // If not on digit
+                if is_digit(pre) {
+                    v = word.parse().unwrap();
+                    println!("[{}] \t{}",v,has_pn);
+                    has_pn = false;
+                    sum += v;
+                }
+                else{
 
+                }
+            }
+            pre = c;
         });
         line_num += 1;
     });
+    println!("SYMBOLS:[{}]",symbols);
     println!("SUM:{}",sum);
 }
