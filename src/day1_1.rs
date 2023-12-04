@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use std::fs;
-use std::io::{self, Read};
 
 pub fn is_digit(c: char) -> bool {
     c >= '0' && c <= '9'

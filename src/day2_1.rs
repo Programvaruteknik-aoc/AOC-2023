@@ -1,5 +1,6 @@
-use std::arch::aarch64::vld1_dup_f32;
-use std::collections::HashMap;
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 use crate::helper::Data;
 enum Types {
     RED = 12,
@@ -13,7 +14,7 @@ pub fn start(){
     for line in data.input.lines(){
         let first:Vec<&str> = line.split(":").collect();
         let mut game_id:i32 = 0;
-        let mut sets:Vec<&str> = vec![];
+        let sets:Vec<&str> = vec![];
         if let Some(substring) = first.get(0) {
             let game_str:Vec<&str> = substring.split_whitespace().collect();
             if let Some(game_id_str) = game_str.get(1){

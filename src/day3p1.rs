@@ -1,4 +1,5 @@
-use std::sync::mpsc::sync_channel;
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use crate::day1_1::is_digit;
 use crate::helper::Data;
 
@@ -51,7 +52,7 @@ pub fn start(){
     //let symbols = String::from("*#+$");
     let mut sum:u32 = 0;
     let mut line_num = 0;
-    let mut lines:Vec<&str> = data.input.lines().collect();
+    let  lines:Vec<&str> = data.input.lines().collect();
     let lines_count = lines.len() as i32;
 
     let mut has_pn = false;

@@ -1,5 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 use std::collections::{HashMap, HashSet};
-use std::sync::mpsc::sync_channel;
 use crate::day1_1::is_digit;
 use crate::helper::Data;
 
@@ -51,7 +53,7 @@ pub fn start(){
     let symbols = who_dis(&data);
     let mut sum:u32 = 0;
     let mut line_num = 0;
-    let mut lines:Vec<&str> = data.input.lines().collect();
+    let lines:Vec<&str> = data.input.lines().collect();
     let lines_count = lines.len() as i32;
 
         let mut ln = 0;
@@ -132,7 +134,7 @@ pub fn start(){
 
                     sum += v;
                     con.iter().for_each(|acon| {
-                        let mut g = gears.get_mut(acon);
+                        let g = gears.get_mut(acon);
                         match g {
                             None => {
                             }

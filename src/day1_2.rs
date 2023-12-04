@@ -1,6 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use std::collections::HashMap;
-use std::ptr::null;
-use std::str::Chars;
+
 use crate::day1_1::is_digit;
 use crate::helper::Data;
 
@@ -18,7 +19,7 @@ fn check_for_word(line:String) -> Vec<char>{
     words.insert("eight", '8');
     words.insert("nine" , '9');
     words.iter().for_each(|word|{
-       if( line.starts_with(word.0)){
+       if line.starts_with(word.0){
            println!("Word match");
            matches.push(*word.1);
        }
