@@ -18,6 +18,8 @@ object Util {
             "src/main/kotlin/day0$day/test.txt"
         else "src/main/kotlin/day$day/test.txt"
     }
+
+
 }
 fun String.extractNumericVal():String{
     return this.filter{
@@ -36,5 +38,10 @@ fun String.extractInt():Int=
 
 fun Int.greaterThan(int:Int):Boolean=
     this>int
+
 fun Int.lessThan(int:Int):Boolean=
     this<int
+
+fun Any?.println() = println(this)
+
+
