@@ -36,7 +36,7 @@ fun String.extractInt():Int=
         it.isDigit()
     }.toInt()
 
-fun Int.greaterThan(int:Int):Boolean=
+fun Int.isGreaterThan(int:Int):Boolean=
     this>int
 
 fun Int.lessThan(int:Int):Boolean=
@@ -44,4 +44,10 @@ fun Int.lessThan(int:Int):Boolean=
 
 fun Any?.println() = println(this)
 
+fun Any?.print() = print(this)
 
+fun Int.isEven():Boolean=
+    this %2 ==0
+
+fun Int.isOdd():Boolean=
+    !this.isEven()
