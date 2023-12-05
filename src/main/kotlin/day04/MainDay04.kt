@@ -12,17 +12,16 @@ fun main() {
 fun part1(input:List<String>){
     //20107
     println("**************** PART 1 ****************")
-
     var points = 0
-    input.forEach { card ->
-        val amountOfWins = getAmountOfWinsOnCard(card = card)
-
+    input.map { card ->
+        val amountOfWins = card.getWinningNumbers().count { it in card.getMyNumbers() }
         points += if (amountOfWins.isGreaterThan(2))
             amountOfWins.geomSeq()
         else amountOfWins
-    }
-
-    "POINTS: $points ".println()
+        points
+        }
+        .last()
+        .println()
     println("****************************************\n")
 }
 
@@ -44,7 +43,7 @@ fun part2(input: List<String>){
             countByCard
         }
         .sum()
-        .also { println("TOTAL CARDS: $it" )}
+        .println()
     println("****************************************")
 
 }
@@ -66,9 +65,3 @@ fun String.getMyNumbers():List<Int> =
 
 fun String.getAllNumbers():List<String> =
     this.split(":").last().split("|")
-
-fun getAmountOfWinsOnCard(card:String):Int{
-    val winningNumList = card.getWinningNumbers()
-    val myNumberList   = card.getMyNumbers()
-    return myNumberList.intersect(winningNumList.toSet()).size
-}
