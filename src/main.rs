@@ -1,6 +1,7 @@
 
 #![allow(dead_code)]
 #![allow(unused_variables)]
+#![allow(unused)]
 mod day1_1;
 mod helper;
 mod day1_2;
@@ -11,6 +12,7 @@ mod day3p1;
 mod day3p2;
 mod day4p1;
 mod day4p2;
+mod day5p1;
 
 fn main() {
     //day1_1::start();
@@ -20,5 +22,6 @@ fn main() {
     //day3p1::start();
     //day3p2::start();
     //day4p1::start();
-    day4p2::start();
+    //day4p2::start();
+    day5p1::start();
 }

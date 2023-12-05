@@ -68,15 +68,18 @@ pub fn start(){
     // lines.iter().for_each(|line| {
     //    println!("{}",line);
     // });
+    let mut rec = 0;
     while !que.is_empty() {
         let matches = get_consecutives_for_card(lines.get(0).unwrap());
         let mut que_clone = que.clone();
         let mut submatch: Vec<i32> = Vec::new();
         que_clone.iter().for_each(|item| {
+            rec += 1;
             let i = (item - 1) as usize;
             //println!("Que[{}]", i);
             //println!("[{} ]", lines.get(i).unwrap());
             submatch.extend(get_consecutives_for_card(lines.get(i).unwrap()));
+            println!("{}",rec);
         });
         total.extend(que_clone.clone());
         que_clone.clear();
