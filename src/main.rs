@@ -14,6 +14,8 @@ mod day4p1;
 mod day4p2;
 mod day5p1;
 mod day5p2;
+mod day6p1;
+mod day6p2;
 
 fn main() {
     //day1_1::start();
@@ -25,5 +27,8 @@ fn main() {
     //day4p1::start();
     //day4p2::start();
     //day5p1::start();
-    day5p2::start();
+    //day5p2::start();
+    //day6p1::start();
+    day6p2::start();
+
 }

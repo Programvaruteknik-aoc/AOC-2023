@@ -1,6 +1,9 @@
 use std::io::BufRead;
 use std::ops::{Range, RangeBounds};
 use std::slice::Iter;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use rayon::ThreadPoolBuilder;
 use crate::helper::Data;
 
 #[derive(Default)]
@@ -60,16 +63,21 @@ impl Entry {
     }
     pub fn go(&mut self){
         let seed_clone = self.seeds.clone();
-        let mut c = 0;
         let total = self.seeds.len();
+        let pool = ThreadPoolBuilder::new().num_threads(2000).build().unwrap();
+        let counter = Arc::new(Mutex::new(0));
         for seed in seed_clone {
-            let mut left = total - c;
-            if left.to_string().ends_with("000000"){
 
-            println!("Entering:{}",left);
-            }
-            c += 1;
-            self.passthrough(seed);
+            pool.install(||{
+                self.passthrough(seed);
+                let mut num = counter.lock().unwrap();
+                //println!("num{}",*num);
+                let mut left = total as i32 - *num as i32;
+                if (*num.to_string()).ends_with("00"){
+                    println!("Entering:{}",*num);
+                }
+                *num += 1;
+            });
         }
     }
     pub fn passthrough(&mut self, seed:u64) -> u64 {
@@ -77,6 +85,7 @@ impl Entry {
         self.maps.iter().for_each(|map|{
             // println!("[{}]", map.name);
             // println!("Entry In:{}",mut_seed);
+
             mut_seed = map.passthrough(mut_seed);
             // print!("Out:{}",mut_seed);
             // println!();
@@ -89,7 +98,7 @@ impl Entry {
     }
 }
 
-fn parse_numbers(num_str:&str) -> Vec<u64>{
+pub fn parse_numbers(num_str:&str) -> Vec<u64>{
     num_str.trim()
         .split_whitespace()
         .filter_map(|s| s.parse::<u64>().ok())
