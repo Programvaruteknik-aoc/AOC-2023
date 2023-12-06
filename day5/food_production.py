@@ -61,12 +61,22 @@ def find_locations_for_seeds(almanac: Almanac) -> list[int]:
 
 def find_location_for_seed_ranges(almanac: Almanac) -> list[int]:
     locations = []
+    processed_seeds = set()
+
     for i in range(0, len(almanac.seeds), 2):
-        for shift in range(almanac.seeds[i+1]):
-            location = find_location_of_seed(almanac, almanac.seeds[i] + shift)
-            if location != -1:
-                locations.append(location)
+        seed_start = almanac.seeds[i]
+        range_length = almanac.seeds[i + 1]
+
+        for shift in range(range_length):
+            seed = seed_start + shift
+            if seed not in processed_seeds:
+                location = find_location_of_seed(almanac, seed)
+                if location != -1:
+                    locations.append(location)
+                processed_seeds.add(seed)
+
     return locations
+
 
 @lru_cache(maxsize=None)
 def find_location_of_seed(almanac: Almanac, seed: int) -> int:
