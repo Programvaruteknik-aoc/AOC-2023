@@ -1,7 +1,7 @@
 from utils.util import get_input
 
 class Hand:
-    def __init__(self, hand:str):
+    def __init__(self, hand:str, joker:bool):
         self.HAND_RANKS = {
             "Five of a Kind": 7,
             "Four of a Kind": 6,
@@ -15,7 +15,7 @@ class Hand:
             "A": 14,
             "K": 13,
             "Q": 12,
-            "J": 11,
+            "J": 1 if joker else 11,
             "T": 10,
             "9": 9,
             "8": 8,
@@ -26,9 +26,11 @@ class Hand:
             "3": 3,
             "2": 2
         }
+        self.joker:bool = joker
         self.cards:str = self.parse_cards(hand)
         self.bid:int = self.parse_bid(hand)
         self.type:int = self.evaluate_type()
+        print(self.type)
 
     def parse_cards(self, hand:str) -> str:
         return hand.split(" ")[0].strip()
@@ -37,11 +39,31 @@ class Hand:
         return int(hand.split(" ")[1].strip())
 
     def evaluate_type(self) -> int:
-        card_counts = {}
+        card_counts = {
+            "A": 0,
+            "K": 0,
+            "Q": 0,
+            "T": 0,
+            "J": 0,
+            "9": 0,
+            "8": 0,
+            "7": 0,
+            "6": 0,
+            "5": 0,
+            "4": 0,
+            "3": 0,
+            "2": 0
+        }
         for card in self.cards:
-            card_counts[card] = card_counts.get(card, 0) + 1
+            if self.joker and card == "J":
+                for found_cards, value in card_counts.items():
+                    if found_cards != "J":
+                        card_counts[found_cards] = value + 1
+            else:
+                card_counts[card] = card_counts.get(card, 0) + 1
 
-        count_values = set(card_counts.values())
+        count_values = list(card_counts.values())
+        print(f"{self.cards} : {self.joker} : {count_values}", end="->")
 
         if 5 in count_values:
             return self.HAND_RANKS["Five of a Kind"]
@@ -82,12 +104,14 @@ def main() -> None:
     print(f"Part two: {part_two(file_input)}")
 
 def part_one(input: list[str]) -> int:
-    hands = [Hand(hand) for hand in input]
+    hands = [Hand(hand, False) for hand in input]
     hands.sort()
     return calculate_total_winnings(hands)
 
 def part_two(input: list[str]) -> int:
-    pass
+    hands = [Hand(hand, True) for hand in input]
+    hands.sort()
+    return calculate_total_winnings(hands)
 
 def calculate_total_winnings(hands:list[str]) -> int:
     total_winnings = 0

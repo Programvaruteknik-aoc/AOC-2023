@@ -14,19 +14,24 @@ class TestDay7(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_part_two(self):
-        expected_result = 0
+        expected_result = 5905
         result:int = camel_cards.part_two(test_input.split("\n"))
         self.assertEqual(result, expected_result)
 
     def test_hand_type(self):
         expected_result = 7
-        result:int = camel_cards.Hand("AAAAA 1").type
+        result:int = camel_cards.Hand("AAAAA 1", False).type
+        self.assertEqual(result, expected_result)
+
+    def test_hand_type_with_joker(self):
+        expected_result = 7
+        result:int = camel_cards.Hand("AAAJA 1", True).type
         self.assertEqual(result, expected_result)
 
     def test_sorting_hands_by_type(self):
         input = ["AAAA2 684", "AAAAA 765"]
         expected_result = "AAAA2"
-        hands = [camel_cards.Hand(hand) for hand in input]
+        hands = [camel_cards.Hand(hand, False) for hand in input]
         hands.sort()
         result:str = hands[0].cards
         self.assertEqual(result, expected_result)
@@ -34,7 +39,15 @@ class TestDay7(unittest.TestCase):
     def test_sorting_hands_by_type_and_card(self):
         input = ["KKAA2 1", "AAJJ3 4"]
         expected_result = "KKAA2"
-        hands = [camel_cards.Hand(hand) for hand in input]
+        hands = [camel_cards.Hand(hand, False) for hand in input]
+        hands.sort()
+        result:str = hands[0].cards
+        self.assertEqual(result, expected_result)
+
+    def test_sorting_hands_by_type_and_card_with_joker(self):
+        input = ["AAAAA 1", "JAAAA 4"]
+        expected_result = "JAAAA"
+        hands = [camel_cards.Hand(hand, False) for hand in input]
         hands.sort()
         result:str = hands[0].cards
         self.assertEqual(result, expected_result)
