@@ -44,11 +44,11 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
     let mut pairs: Vec<_> = hand_rank.iter().collect();
     pairs.sort_by(|a, b| b.1.cmp(a.1));
 
-    // for (key, value) in pairs {
-    //     println!("{}: {}", key, value);
-    // }
     let has_j = hand.find('J').unwrap_or_else(|| usize::MIN) as u64;
     let highest_pair = pairs.get(0).unwrap().clone();
+    let remain: String = hand.chars()
+        .filter(|&c| c != *highest_pair.0)
+        .collect();
     let next_highest_pair = pairs.get(1).unwrap_or_else(||{
         &(&'Y', &0)
     }).clone();
@@ -57,55 +57,36 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
     let mut rank:u64 = 0;
     match highest {
         5 => {
-            // Five of a kind
             rank = FIVE_OF_A_KIND;
         }
         4 => {
-            // Four of a kind
             rank = FOUR_OF_A_KIND;
             if has_j > 0{
                 rank = FIVE_OF_A_KIND;
             }
         }
         3 => {
-            if  next_highest == 2{
-                // Full house
-                rank = FULL_HOUSE;
-
-                if has_j > 0{
-                    rank = FIVE_OF_A_KIND;
-                }
-            }
-            else if next_highest == 1{
-                let next_next_pair = pairs.get(2).unwrap().clone();
-                let next_highest = *next_highest_pair.1;
-                if *next_highest_pair.0 == 'J' || *next_next_pair.0 == 'J'{
-                    rank = FOUR_OF_A_KIND;
-                }
-                else {
-                    rank = THREE_OF_A_KIND;
-                }
-            }
 
         }
         2 => {
-            if next_highest == 2{
-                // Two pairs
-                rank = TWO_PAIR;
-                if has_j == 1 {
-                    rank = FULL_HOUSE;
+            match remain.chars().filter(|ch|ch == &'J').count() as u64 {
+                0 => {
+                    if next_highest == 3{
+                        rank = FULL_HOUSE;
+                    }
                 }
-                else if has_j == 2{
+                1 => {
                     rank = FOUR_OF_A_KIND;
                 }
-            }
-            else{
-                // One Pair
-                rank = ONE_PAIR;
-                if has_j == 1 || has_j == 2{
-                    rank = THREE_OF_A_KIND
+                2 => {
+                    rank = FIVE_OF_A_KIND;
                 }
+                2 => {
+                    rank = FIVE_OF_A_KIND;
+                }
+                _ => {}
             }
+
         }
         1 => {
             rank = HIGH_CARD;
