@@ -61,6 +61,7 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
         }
         4 => {
             // Four of a kind
+
             rank = 6;
         }
         3 => {
@@ -96,11 +97,11 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
 }
 
 pub fn start(){
-    let data:Data = Data::new(7,1);
+    let data:Data = Data::new(7,2);
     let mut hands:HashMap<&str,&str> = HashMap::new();
     let mut ranks:HashMap<&str,u32> = HashMap::new();
-    data.input.lines().for_each(|line|{
-       let kv = line.split_once(" ").unwrap();
+    data.example.lines().for_each(|line|{
+        let kv = line.split_once(" ").unwrap();
         hands.insert(kv.0,kv.1);
     });
 
@@ -153,4 +154,17 @@ KTJJT
 KK677
 T55J5
 QQQJA
+
+ Hand:32T3K: Rank:1 Bid:765 Preorder:2
+Hand:KTJJT: Rank:2 Bid:220 Preorder:3
+Hand:KK677: Rank:3 Bid:28 Preorder:3
+Hand:QQQJA: Rank:4 Bid:483 Preorder:4
+Hand:T55J5: Rank:5 Bid:684 Preorder:4
+
+Hand:32T3K: Rank:1 Bid:765 Preorder:2
+Hand:KTJJT: Rank:2 Bid:220 Preorder:3
+Hand:KK677: Rank:3 Bid:28 Preorder:3
+Hand:T55J5: Rank:4 Bid:684 Preorder:4
+Hand:QQQJA: Rank:5 Bid:483 Preorder:4
+
  */
