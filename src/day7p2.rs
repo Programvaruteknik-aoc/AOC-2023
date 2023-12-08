@@ -13,6 +13,8 @@ fn find_value_by_card(hand1:&str, hand2:&str) -> (u32,u32){
     let mut index = 0;
     let mut a = hand1.chars().nth(index).unwrap();
     let mut b = hand2.chars().nth(index).unwrap();
+    println!("{}<->{}",hand1,hand2);
+    println!("***********");
     while a == b {
         a = hand1.chars().nth(index).unwrap();
         b = hand2.chars().nth(index).unwrap();
@@ -21,20 +23,7 @@ fn find_value_by_card(hand1:&str, hand2:&str) -> (u32,u32){
     let tup = (find_value_for_card(a),find_value_for_card(b));
     return tup;
 }
-fn rearrange(duplicate: &mut Vec<(&str, u32)>){
-    duplicate.sort_by(|a, b| {
-        let values = find_value_by_card((*a).0,(*b).0);
-        let a_val = values.0;
-        let b_val = values.1;
-        if a_val < b_val {
-            return Ordering::Less;
-        } else if a_val > b_val {
-            return Ordering::Greater;
-        } else {
-            return Ordering::Equal;
-        }
-    });
-}
+
 fn find_rank(hand:&str) -> (&str, u32,u64) {
     let values:Vec<char> = vec!['X','X','2','3','4','5','6','7','8','9','T','J','Q','K','A'];
     let index = values.iter().enumerate().find(|&(_idx, &val)| val == 'K').unwrap();
@@ -84,6 +73,9 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
             else{
                 // Three of a kind
                 rank = 4;
+                if has_j > 0{
+                    rank = 6;
+                }
             }
 
         }
@@ -92,7 +84,7 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
                 // Two pairs
                 rank = 3;
                 if has_j == 1 {
-                    rank = 4;
+                    rank = 5;
                 }
                 else if has_j == 2{
                     rank = 6;
@@ -110,8 +102,8 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
         }
         1 => {
             rank = 1;
-            if has_j > 0 {
-
+            if has_j == 1 {
+                rank = 2;
             }
         }
         _ => { rank = 0;}
@@ -137,9 +129,10 @@ pub fn start(){
     }
     ranked_hands.sort_by(|a, b| b.1.cmp(&a.1));
     let highest = ranked_hands.iter().max_by_key(|&(_,value,_)|value).unwrap().1;
-    for index in 1..highest {
+    for index in 1..highest+1 {
         let start = ranked_hands.iter().position(|&(_, v, _)| v == index).unwrap_or(0);
         let end = ranked_hands.iter().rposition(|&(_, v, _)| v == index).map_or(start, |i| i + 1);
+        println!("Index:{} start:{} end:{}",index,start,end);
         ranked_hands[start..end].sort_by(|a, b|{
             let values = find_value_by_card((*a).0,(*b).0);
             let a_val = values.0;
@@ -194,4 +187,6 @@ low 253271833
 253269996
 253264768
 253273054
+low 253293482
+    253301037
  */
