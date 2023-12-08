@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::helper::Data;
 
 fn find_value_for_card(card:char) -> u32{
-    let values:Vec<char> = vec!['X','X','2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+    let values:Vec<char> = vec!['X','J','2','3','4','5','6','7','8','9','T','J','Q','K','A'];
     values.iter().enumerate().find(|&(_idx, &val)| val == card).unwrap().0 as u32
 }
 fn find_occurrences(hand:&str, card:char) -> u32{
@@ -50,10 +50,14 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
     // for (key, value) in pairs {
     //     println!("{}: {}", key, value);
     // }
+    let has_j = hand.find('J').unwrap_or_else(|| usize::MIN) as u64;
     let highest_pair = pairs.get(0).unwrap().clone();
-
+    let next_highest_pair = pairs.get(1).unwrap_or_else(||{
+        &(&'Y', &0)
+    }).clone();
+    let next_highest = *next_highest_pair.1;
     let highest = *highest_pair.1;
-    let mut rank:u32 = 0;
+    let mut rank:u64 = 0;
     match highest {
         5 => {
             // Five of a kind
@@ -61,39 +65,58 @@ fn find_rank(hand:&str) -> (&str, u32,u64) {
         }
         4 => {
             // Four of a kind
-
             rank = 6;
+            if has_j == 1 {
+                rank = 7;
+            }
         }
         3 => {
-            let next_highest_pair = pairs.get(1).unwrap().clone();
-            let next_highest = *next_highest_pair.1;
             if  next_highest == 2{
                 // Full house
                 rank = 5;
+                if has_j == 1 {
+                    rank = 6;
+                }
+                else if has_j == 2{
+                    rank = 7;
+                }
             }
             else{
                 // Three of a kind
                 rank = 4;
             }
+
         }
         2 => {
-            let next_highest_pair = pairs.get(1).unwrap().clone();
-            let next_highest = *next_highest_pair.1;
             if next_highest == 2{
                 // Two pairs
                 rank = 3;
+                if has_j == 1 {
+                    rank = 4;
+                }
+                else if has_j == 2{
+                    rank = 6;
+                }
             }
             else{
                 // One Pair
                 rank = 2;
+                if has_j == 1{
+                    rank = 4
+                }
+
             }
+
         }
         1 => {
             rank = 1;
+            if has_j > 0 {
+
+            }
         }
         _ => { rank = 0;}
     }
-    return (hand, rank, 0);
+    return (hand, rank as u32, 0);
 }
 
 pub fn start(){
@@ -166,5 +189,9 @@ Hand:KTJJT: Rank:2 Bid:220 Preorder:3
 Hand:KK677: Rank:3 Bid:28 Preorder:3
 Hand:T55J5: Rank:4 Bid:684 Preorder:4
 Hand:QQQJA: Rank:5 Bid:483 Preorder:4
-
+low 253269737
+low 253271833
+253269996
+253264768
+253273054
  */
