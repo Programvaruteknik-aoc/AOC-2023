@@ -45,8 +45,8 @@ class TestDay7(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_sorting_hands_by_type_and_card_with_joker(self):
-        input = ["AAAAA 1", "JAAAA 4"]
-        expected_result = "JAAAA"
+        input = ["2AAAA 1", "JAAA2 4"]
+        expected_result = "JAAA2"
         hands = [camel_cards.Hand(hand, False) for hand in input]
         hands.sort()
         result:str = hands[0].cards

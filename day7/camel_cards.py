@@ -30,7 +30,6 @@ class Hand:
         self.cards:str = self.parse_cards(hand)
         self.bid:int = self.parse_bid(hand)
         self.type:int = self.evaluate_type()
-        print(self.type)
 
     def parse_cards(self, hand:str) -> str:
         return hand.split(" ")[0].strip()
@@ -54,17 +53,20 @@ class Hand:
             "3": 0,
             "2": 0
         }
+        joker_count = 0
         for card in self.cards:
             if self.joker and card == "J":
-                for found_cards, value in card_counts.items():
-                    if found_cards != "J":
-                        card_counts[found_cards] = value + 1
+                joker_count += 1
             else:
                 card_counts[card] = card_counts.get(card, 0) + 1
 
-        count_values = list(card_counts.values())
-        print(f"{self.cards} : {self.joker} : {count_values}", end="->")
+        if self.joker:
+            card_counts[max(card_counts, key=card_counts.get)] += joker_count
 
+        return self.get_type(list(card_counts.values()))
+
+
+    def get_type(self, count_values:list[int]) -> int:
         if 5 in count_values:
             return self.HAND_RANKS["Five of a Kind"]
         elif 4 in count_values:
