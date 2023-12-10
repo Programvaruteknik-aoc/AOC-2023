@@ -25,17 +25,17 @@ def part_two(input: list[str]) -> int:
     for coord in coord_map:
         directions = itertools.cycle(input[0])
         if coord.endswith("A"):
-            steps = math.lcm(steps, solvesteps(coord, directions, coord_map))
+            steps = math.lcm(steps, interate_through_steps(coord, directions, coord_map))
     return steps
 
-def solvesteps(start, directions, coord_map):
-    pos = start
-    i = 0
-    while not pos.endswith('Z'):
-        d = next(directions)
-        pos = coord_map[pos][0 if d=='L' else 1]
-        i += 1
-    return i
+def interate_through_steps(start, directions, coord_map):
+    current_position = start
+    iterations = 0
+    while not current_position.endswith('Z'):
+        direction = next(directions)
+        current_position = coord_map[current_position][0 if direction=='L' else 1]
+        iterations += 1
+    return iterations
 
 def calculate_steps(directions, current_location, target_location, coord_map):
     steps = 0
