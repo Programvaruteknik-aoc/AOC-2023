@@ -15,8 +15,8 @@ impl Data{
         let dir:String = "./src/inputs/day".to_owned() + &*d + "/day" + &*d + "_";
         let in_path:String = dir.clone() + "input" + &*p + ".txt";
         let ex_path:String = dir.clone() + "example" + &*p + ".txt";
-        println!("{}",in_path);
-        println!("{}",ex_path);
+        // println!("{}",in_path);
+        // println!("{}",ex_path);
         let example:String = fs::read_to_string(ex_path).expect("Could not read example file");
         let input:String = fs::read_to_string(in_path).expect("Could not read input file");
         Data{example, input}
