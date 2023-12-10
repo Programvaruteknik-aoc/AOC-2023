@@ -12,14 +12,14 @@ def part_one(input:list[str]) -> int:
     return sum([predict_next_value(line) for line in input])
 
 def part_two(input:list[str]) -> int:
-    return 0
+    return sum([predict_next_value(line, True) for line in input])
 
-def predict_next_value(history_line:str) -> int:
+def predict_next_value(history_line:str, reverse:bool = False) -> int:
     history: list[int] = parse_numbers(history_line)
     expanded_history:list[list[int]] = [history]
     while not all(value == 0 for value in expanded_history[-1]):
         expanded_history.append(create_next_sequence(expanded_history[-1]))
-    return extrapolate(expanded_history)
+    return extrapolate(expanded_history) if not reverse else extrapolate_backwards(expanded_history)
 
 def parse_numbers(history_line:str) -> list[int]:
     return [int(value) for value in history_line.split(" ")]
@@ -35,6 +35,13 @@ def extrapolate(history_sequences:list[list[int]]) -> int:
     for i in range(len(history_sequences), 0, -1):
         prev_last = history_sequences[i-1][-1]
         temp_values = prev_last + temp_values
+    return temp_values
+
+def extrapolate_backwards(history_sequences:list[list[int]]) -> int:
+    temp_values = 0
+    for i in range(len(history_sequences), 0, -1):
+        prev_first = history_sequences[i-1][0]
+        temp_values = prev_first - temp_values
     return temp_values
 
 def calculate_difference(first:int, second:int) -> int:

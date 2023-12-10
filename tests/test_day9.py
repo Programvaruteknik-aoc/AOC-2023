@@ -13,7 +13,7 @@ class TestDay9(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_part_two(self):
-        expected_result = 12
+        expected_result = 2
         result:int = mirage_maintenance.part_two(test_input.split("\n"))
         self.assertEqual(result, expected_result)
 
