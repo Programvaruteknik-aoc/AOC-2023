@@ -44,7 +44,7 @@ fn main() {
     //day8p2::start();
     //day9p1::start();
     //day9p2::start();
-    day10p1::start();
+    //day10p1::start();
     day10p2::start();
 
 }
