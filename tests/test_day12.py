@@ -9,7 +9,7 @@ test_input_1 = """\
 ????.######..#####. 1,6,5
 ?###???????? 3,2,1"""
 
-class TestDay11(unittest.TestCase):
+class TestDay12(unittest.TestCase):
     def test_part_one(self):
         expected_result = 21
         result:int = hot_springs.part_one(test_input_1.split("\n"))
