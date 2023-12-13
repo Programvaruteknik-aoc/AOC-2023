@@ -25,7 +25,7 @@ class TestDay13(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_part_two(self):
-        expected_result = -1
+        expected_result = 400
         result:int = point_of_incidence.part_two(test_input_1.split("\n"))
         self.assertEqual(result, expected_result)
 

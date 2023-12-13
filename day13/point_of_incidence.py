@@ -7,17 +7,13 @@ def main() -> None:
 
 def part_one(input: list[str]) -> int:
     patterns = extract_patterns(input)
-    vertical_mirrors = []
-    horizontal_mirrors = []
-    for pattern in patterns:
-        v_mirror = find_real_vertical_mirror(pattern, find_possible_vertical_mirrors(pattern))
-        h_mirror = find_real_horizontal_mirror(pattern, find_possible_horizontal_mirrors(pattern))
-        vertical_mirrors.append(v_mirror)
-        horizontal_mirrors.append(h_mirror)
-    return sum(vertical_mirrors) + sum(horizontal_mirrors) * 100
+    return sum(find_real_vertical_mirror(pattern, find_possible_vertical_mirrors) for pattern in patterns) \
+           + sum(find_real_horizontal_mirror(pattern, find_possible_horizontal_mirrors) for pattern in patterns) * 100
 
 def part_two(input:list[str]) -> int:
-    return 0
+    patterns = extract_patterns(input)
+    return sum(find_real_vertical_mirror(pattern, find_possible_vertical_mirrors, True) for pattern in patterns) \
+           + sum(find_real_horizontal_mirror(pattern, find_possible_horizontal_mirrors, True) for pattern in patterns) * 100
 
 def extract_patterns(input: list[str]) -> list[list[str]]:
     patterns, pattern = [], []
@@ -40,9 +36,9 @@ def find_possible_vertical_mirrors(pattern: list[str]) -> list[int]:
 
     return possible_mirrors
 
-def find_real_vertical_mirror(pattern: list[str], possible_locations: list[int]) -> int:
+def find_real_vertical_mirror(pattern: list[str], possible_locations: callable, clean_smudge = False) -> int:
     num_rows, num_cols = len(pattern), len(pattern[0])
-    for location in possible_locations:
+    for location in possible_locations(pattern):
         is_mirror = True
         left_index, right_index = location - 1, location
         while left_index >= 0 and right_index < num_cols:
@@ -58,13 +54,37 @@ def find_real_vertical_mirror(pattern: list[str], possible_locations: list[int])
 def find_possible_horizontal_mirrors(pattern: list[str]) -> list[int]:
     return [i + 1 for i, (line, next_line) in enumerate(zip(pattern, pattern[1:])) if line == next_line]
 
-def find_real_horizontal_mirror(pattern: list[str], possible_locations: list[int]) -> int:
-    for location in possible_locations:
+def find_real_horizontal_mirror(pattern: list[str], possible_locations: callable, clean_smudge = False) -> int:
+    for location in possible_locations(pattern):
         upper_rows = pattern[:location:][::-1]
         lower_rows = pattern[location:]
         if all(upper_rows[row] == lower_rows[row] for row in range(min(len(upper_rows), len(lower_rows)))):
             return location
     return 0
+
+def fix_vertical_smudge(pattern: list[str], left_index: int, right_index: int) -> bool:
+    num_rows = len(pattern)
+    for row in range(num_rows):
+        if pattern[row][left_index] != pattern[row][right_index]:
+            new_char_left = '#' if pattern[row][right_index] == '.' else '.'
+            pattern[row] = replace_char_at_index(pattern[row], left_index, new_char_left)
+            return True
+    return False
+
+def fix_horizontal_smudge(pattern: list[str], upper_index: int, lower_index: int) -> bool:
+    num_cols = len(pattern[0])
+    smudge_fixed = False
+
+    for col in range(num_cols):
+        if pattern[upper_index][col] != pattern[lower_index][col]:
+            new_char = '#' if pattern[upper_index][col] == '.' else '.'
+            pattern[upper_index] = replace_char_at_index(pattern[upper_index], col, new_char)
+            smudge_fixed = True
+
+    return smudge_fixed
+
+def replace_char_at_index(s: str, index: int, new_char: str) -> str:
+    return s[:index] + new_char + s[index + 1:]
 
 if __name__ == "__main__":
     main()
