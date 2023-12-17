@@ -1,4 +1,5 @@
 from utils.util import get_input
+import numpy as np
 
 def main() -> None:
     file_input = get_input("day13/input.txt")
@@ -10,10 +11,15 @@ def part_one(input: list[str]) -> int:
     return sum(find_real_vertical_mirror(pattern, find_possible_vertical_mirrors) for pattern in patterns) \
            + sum(find_real_horizontal_mirror(pattern, find_possible_horizontal_mirrors) for pattern in patterns) * 100
 
-def part_two(input:list[str]) -> int:
+def part_two(input: list[str]) -> int:
     patterns = extract_patterns(input)
-    return sum(find_real_vertical_mirror(pattern, find_possible_vertical_mirrors, True) for pattern in patterns) \
-           + sum(find_real_horizontal_mirror(pattern, find_possible_horizontal_mirrors, True) for pattern in patterns) * 100
+    total = 0
+    for pattern in patterns:
+        pattern_grid = np.array([list(row) for row in pattern])
+        horizontal_score = 100 * calculate_mirror_location(pattern_grid, is_smudged=True)
+        vertical_score = calculate_mirror_location(pattern_grid.T, is_smudged=True)
+        total += horizontal_score or vertical_score
+    return total
 
 def extract_patterns(input: list[str]) -> list[list[str]]:
     patterns, pattern = [], []
@@ -62,29 +68,21 @@ def find_real_horizontal_mirror(pattern: list[str], possible_locations: callable
             return location
     return 0
 
-def fix_vertical_smudge(pattern: list[str], left_index: int, right_index: int) -> bool:
-    num_rows = len(pattern)
-    for row in range(num_rows):
-        if pattern[row][left_index] != pattern[row][right_index]:
-            new_char_left = '#' if pattern[row][right_index] == '.' else '.'
-            pattern[row] = replace_char_at_index(pattern[row], left_index, new_char_left)
-            return True
-    return False
+def calculate_mirror_location(patterns: np.array[str], is_smudged: bool = False) -> int:
+    original_mirror_location = calculate_mirror_location(patterns, is_smudged=False) if is_smudged else 0
 
-def fix_horizontal_smudge(pattern: list[str], upper_index: int, lower_index: int) -> bool:
-    num_cols = len(pattern[0])
-    smudge_fixed = False
+    for potential_mirror in range(1, patterns.shape[0]):
+        if potential_mirror == original_mirror_location:
+            continue
+        mismatch_count = 0
+        for upper_part, lower_part in zip(reversed(patterns[:potential_mirror]), patterns[potential_mirror:]):
+            mismatch_count += sum(upper != lower for upper, lower in zip(upper_part, lower_part))
+            if mismatch_count > is_smudged:
+                break
+        else:
+            return potential_mirror
 
-    for col in range(num_cols):
-        if pattern[upper_index][col] != pattern[lower_index][col]:
-            new_char = '#' if pattern[upper_index][col] == '.' else '.'
-            pattern[upper_index] = replace_char_at_index(pattern[upper_index], col, new_char)
-            smudge_fixed = True
-
-    return smudge_fixed
-
-def replace_char_at_index(s: str, index: int, new_char: str) -> str:
-    return s[:index] + new_char + s[index + 1:]
+    return 0
 
 if __name__ == "__main__":
     main()
